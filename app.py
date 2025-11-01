@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import joblib
+import os
 import numpy as np
 
 app = Flask(__name__)
 
-# Load trained model and encoder
-model = joblib.load("mini_project/model.pkl")
-encoder = joblib.load("mini_project/encoder.pkl")
+model = joblib.load(os.path.join(os.path.dirname(__file__), "model.pkl"))
+encoder = joblib.load(os.path.join(os.path.dirname(__file__), "encoder.pkl"))
 
 # Prediction route
 @app.route("/", methods=["GET", "POST"])
