@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 25px 40px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            text-align: center;
+            color: #111;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🏠 Real Estate Price Prediction</h2>
+        <form method="POST" action="/">
+            <input type="number" name="Area_sqft" placeholder="Area (sqft)" required>
+            <input type="number" name="Bedrooms" placeholder="No. of Bedrooms" required>
+            <input type="number" name="Bathroom" placeholder="No. of Bathrooms" required>
+
+            <select name="Location_Type" required>
+                <option value="" disabled selected>Select Location Type</option>
+                <option value="Urban">Urban</option>
+                <option value="Semiurban">Semiurban</option>
+                <option value="Rural">Rural</option>
+            </select>
+
+            <select name="House_Type" required>
+                <option value="" disabled selected>Select House Type</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Villa">Villa</option>
+                <option value="Duplex">Duplex</option>
+            </select>
+
+            <select name="State" required>
+                <option value="" disabled selected>Select State</option>
+                <option value="Delhi (UT)">Delhi (UT)</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Gujarat">Gujarat</option>
+            </select>
+
+            <select name="City" required>
+                <option value="" disabled selected>Select City</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Pune">Pune</option>
+                <option value="Surat">Surat</option>
+                <option value="Ahmedabad">Ahmedabad</option>
+                <option value="Lucknow">Lucknow</option>
+                <option value="Coimbatore">Coimbatore</option>
+                <option value="Mysuru">Mysuru</option>
+                <option value="Noida">Noida</option>
+            </select>
+
+            <button type="submit">Predict Price</button>
+        </form>
+
+        <div class="result">{{ prediction_text }}</div>
+    </div>
+</body>
+</html>
