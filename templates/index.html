@@ -40,9 +40,16 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            margin-top: 5px;
         }
         button:hover {
             background-color: #0056b3;
+        }
+        .reset-btn {
+            background-color: #dc3545;
+        }
+        .reset-btn:hover {
+            background-color: #b02a37;
         }
         .result {
             margin-top: 15px;
@@ -57,52 +64,90 @@
     <div class="container">
         <h2>🏠 Real Estate Price Prediction</h2>
         <form method="POST" action="/">
-            <input type="number" name="Area_sqft" placeholder="Area (sqft)" required>
-            <input type="number" name="Bedrooms" placeholder="No. of Bedrooms" required>
-            <input type="number" name="Bathroom" placeholder="No. of Bathrooms" required>
+            <input type="number" name="Area_sqft" placeholder="Area (sqft)" value="{{ request.form.get('Area_sqft', '') }}" required>
+            <input type="number" name="Bedrooms" placeholder="No. of Bedrooms" value="{{ request.form.get('Bedrooms', '') }}" required>
+            <input type="number" name="Bathroom" placeholder="No. of Bathrooms" value="{{ request.form.get('Bathroom', '') }}" required>
 
             <select name="Location_Type" required>
-                <option value="" disabled selected>Select Location Type</option>
-                <option value="Urban">Urban</option>
-                <option value="Semiurban">Semiurban</option>
-                <option value="Rural">Rural</option>
+                <option value="" disabled {% if not request.form.get('Location_Type') %}selected{% endif %}>Select Location Type</option>
+                <option value="Urban" {% if request.form.get('Location_Type') == 'Urban' %}selected{% endif %}>Urban</option>
+                <option value="Semiurban" {% if request.form.get('Location_Type') == 'Semiurban' %}selected{% endif %}>Semiurban</option>
+                <option value="Rural" {% if request.form.get('Location_Type') == 'Rural' %}selected{% endif %}>Rural</option>
             </select>
 
             <select name="House_Type" required>
-                <option value="" disabled selected>Select House Type</option>
-                <option value="Apartment">Apartment</option>
-                <option value="Villa">Villa</option>
-                <option value="Duplex">Duplex</option>
+                <option value="" disabled {% if not request.form.get('House_Type') %}selected{% endif %}>Select House Type</option>
+                <option value="Apartment" {% if request.form.get('House_Type') == 'Apartment' %}selected{% endif %}>Apartment</option>
+                <option value="Villa" {% if request.form.get('House_Type') == 'Villa' %}selected{% endif %}>Villa</option>
+                <option value="Duplex" {% if request.form.get('House_Type') == 'Duplex' %}selected{% endif %}>Duplex</option>
             </select>
 
-            <select name="State" required>
-                <option value="" disabled selected>Select State</option>
-                <option value="Delhi (UT)">Delhi (UT)</option>
-                <option value="Maharashtra">Maharashtra</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Tamil Nadu">Tamil Nadu</option>
-                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                <option value="Gujarat">Gujarat</option>
+            <select name="State" id="state" required>
+                <option value="" disabled {% if not request.form.get('State') %}selected{% endif %}>Select State</option>
+                <option value="Maharashtra" {% if request.form.get('State') == 'Maharashtra' %}selected{% endif %}>Maharashtra</option>
+                <option value="Karnataka" {% if request.form.get('State') == 'Karnataka' %}selected{% endif %}>Karnataka</option>
+                <option value="Delhi (UT)" {% if request.form.get('State') == 'Delhi (UT)' %}selected{% endif %}>Delhi (UT)</option>
+                <option value="Tamil Nadu" {% if request.form.get('State') == 'Tamil Nadu' %}selected{% endif %}>Tamil Nadu</option>
+                <option value="Uttar Pradesh" {% if request.form.get('State') == 'Uttar Pradesh' %}selected{% endif %}>Uttar Pradesh</option>
+                <option value="Gujarat" {% if request.form.get('State') == 'Gujarat' %}selected{% endif %}>Gujarat</option>
+                <option value="Rajasthan" {% if request.form.get('State') == 'Rajasthan' %}selected{% endif %}>Rajasthan</option>
+                <option value="West Bengal" {% if request.form.get('State') == 'West Bengal' %}selected{% endif %}>West Bengal</option>
+                <option value="Madhya Pradesh" {% if request.form.get('State') == 'Madhya Pradesh' %}selected{% endif %}>Madhya Pradesh</option>
+                <option value="Bihar" {% if request.form.get('State') == 'Bihar' %}selected{% endif %}>Bihar</option>
             </select>
 
-            <select name="City" required>
-                <option value="" disabled selected>Select City</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Bengaluru">Bengaluru</option>
-                <option value="Pune">Pune</option>
-                <option value="Surat">Surat</option>
-                <option value="Ahmedabad">Ahmedabad</option>
-                <option value="Lucknow">Lucknow</option>
-                <option value="Coimbatore">Coimbatore</option>
-                <option value="Mysuru">Mysuru</option>
-                <option value="Noida">Noida</option>
+            <select name="City" id="city" required>
+                <option value="" disabled {% if not request.form.get('City') %}selected{% endif %}>Select City</option>
             </select>
 
             <button type="submit">Predict Price</button>
+            <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
         </form>
 
         <div class="result">{{ prediction_text }}</div>
     </div>
+
+    <script>
+        const stateCityMap = {
+            "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad"],
+            "Karnataka": ["Bengaluru", "Mysuru", "Mangalore", "Hubli"],
+            "Delhi (UT)": ["New Delhi", "Dwarka", "Rohini", "Saket"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Salem"],
+            "Uttar Pradesh": ["Lucknow", "Noida", "Kanpur", "Varanasi", "Agra"],
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+            "Rajasthan": ["Jaipur", "Udaipur", "Jodhpur", "Kota"],
+            "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Siliguri"],
+            "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur"],
+            "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur"]
+        };
+
+        const stateSelect = document.getElementById("state");
+        const citySelect = document.getElementById("city");
+
+        function populateCities() {
+            const selectedState = stateSelect.value;
+            citySelect.innerHTML = '<option value="" disabled selected>Select City</option>';
+
+            if (stateCityMap[selectedState]) {
+                stateCityMap[selectedState].forEach(city => {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    if (city === "{{ request.form.get('City', '') }}") {
+                        option.selected = true;
+                    }
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+
+        stateSelect.addEventListener("change", populateCities);
+        window.onload = populateCities;
+
+        function resetForm() {
+            document.querySelector("form").reset();
+            citySelect.innerHTML = '<option value="" disabled selected>Select City</option>';
+        }
+    </script>
 </body>
 </html>
