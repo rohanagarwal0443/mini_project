@@ -101,7 +101,8 @@
             </select>
 
             <button type="submit">Predict Price</button>
-            <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+            <!-- ✅ Fixed Reset Button -->
+            <button type="button" class="reset-btn" onclick="window.location.href='/'">Reset</button>
         </form>
 
         <div class="result">{{ prediction_text }}</div>
@@ -143,11 +144,6 @@
 
         stateSelect.addEventListener("change", populateCities);
         window.onload = populateCities;
-
-        function resetForm() {
-            document.querySelector("form").reset();
-            citySelect.innerHTML = '<option value="" disabled selected>Select City</option>';
-        }
     </script>
 </body>
 </html>
